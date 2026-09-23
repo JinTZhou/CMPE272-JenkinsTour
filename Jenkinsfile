@@ -1,40 +1,27 @@
 pipeline {
     agent any
 
-    stages {
-        stage('No-op') {
-            steps {
-                bat '''
-                    @echo off
-                    echo Workspace contents:
-
-                    for /D %%D in (*) do echo [DIRECTORY] %%D
-                    for %%F in (*) do echo [FILE] %%F
-                '''
-            }
-        }
+    options {
+        skipStagesAfterUnstable()
     }
 
-    post {
-        always {
-            echo 'One way or another, I have finished'
-            deleteDir()
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building'
+            }
         }
 
-        success {
-            echo 'I succeeded!'
+        stage('Test') {
+            steps {
+                echo 'Testing'
+            }
         }
 
-        unstable {
-            echo 'I am unstable :/'
-        }
-
-        failure {
-            echo 'I failed :('
-        }
-
-        changed {
-            echo 'Things were different before...'
+        stage('Deploy') {
+            steps {
+                echo 'Deploying'
+            }
         }
     }
 }
