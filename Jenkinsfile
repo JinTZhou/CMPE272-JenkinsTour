@@ -1,26 +1,25 @@
 pipeline {
     agent any
 
-    options {
-        skipStagesAfterUnstable()
-    }
-
     stages {
-        stage('Build') {
+        /* Build and Test stages omitted */
+
+        stage('Deploy - Staging') {
             steps {
-                echo 'Building'
+                bat 'call deploy.bat staging'
+                bat 'call run-smoke-tests.bat'
             }
         }
 
-        stage('Test') {
+        stage('Sanity check') {
             steps {
-                echo 'Testing'
+                input 'Does the staging environment look ok?'
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy - Production') {
             steps {
-                echo 'Deploying'
+                bat 'call deploy.bat production'
             }
         }
     }
