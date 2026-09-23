@@ -2,15 +2,17 @@ pipeline {
     agent any
 
     stages {
-        stage('Inspect Environment') {
+        stage('Environment Variables') {
             steps {
-                bat encoding: 'UTF-8', script: '''
+                echo "Jenkins application name: ${APP_NAME}"
+
+                bat '''
                     @echo off
-                    echo Windows Jenkins environment:
-                    ver
-                    echo.
-                    echo Docker execution environment:
-                    docker run --rm python:3.12-alpine python -c "import platform; print('Architecture:', platform.machine()); print('Operating system:', platform.system())"
+                    echo Application: %APP_NAME%
+                    echo Test environment: %TEST_ENV%
+                    echo Build number: %BUILD_NUMBER%
+                    echo Branch: %BRANCH_NAME%
+                    echo Workspace: %WORKSPACE%
                 '''
             }
         }
