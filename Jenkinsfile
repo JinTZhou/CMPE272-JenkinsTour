@@ -4,23 +4,36 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                bat 'call gradlew.bat build'
+                bat '''
+                    @echo off
+                    if not exist dist mkdir dist
+                    copy /Y app.py dist
+                '''
             }
         }
 
         stage('Test') {
             steps {
-                bat 'call gradlew.bat check'
+                bat '''
+                    @echo off
+                    if not exist reports mkdir reports
+
+                    docker run --rm ^
+                        -v "%WORKSPACE%:/workspace" ^
+                        -w /workspace ^
+                        python:3.12-alpine ^
+                        sh -c "pip install -r requirements.txt && pytest --junitxml=reports/junit.xml"
+                '''
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'build/libs/**/*.jar',
-                             fingerprint: true
+            junit 'reports/*.xml'
 
-            junit 'build/reports/**/*.xml'
+            archiveArtifacts artifacts: 'dist/**',
+                             fingerprint: true
         }
     }
 }
