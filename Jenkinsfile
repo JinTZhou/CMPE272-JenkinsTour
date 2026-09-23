@@ -4,9 +4,12 @@ pipeline {
     stages {
         stage('No-op') {
             steps {
-                bat encoding: 'GBK', script: '''
+                bat '''
                     @echo off
-                    dir
+                    echo Workspace contents:
+
+                    for /D %%D in (*) do echo [DIRECTORY] %%D
+                    for %%F in (*) do echo [FILE] %%F
                 '''
             }
         }
