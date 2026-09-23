@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Inspect Environment') {
             steps {
-                bat '''
+                bat encoding: 'UTF-8', script: '''
                     @echo off
                     echo Windows Jenkins environment:
                     ver
