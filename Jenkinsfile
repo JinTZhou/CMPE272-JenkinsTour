@@ -2,16 +2,18 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Deploy') {
             steps {
-                bat encoding: 'UTF-8', script: '''
-                    @echo off
-                    chcp 65001 >nul
+                // Reset the demonstration counter before retrying.
+                bat 'if exist deploy-attempt.txt del /q deploy-attempt.txt'
 
-                    echo Hello World
-                    echo Multiline batch steps work too
-                    dir
-                '''
+                retry(3) {
+                    bat 'call flakey-deploy.bat'
+                }
+
+                timeout(time: 3, unit: 'MINUTES') {
+                    bat 'call health-check.bat'
+                }
             }
         }
     }
