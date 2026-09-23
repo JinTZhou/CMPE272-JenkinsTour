@@ -1,18 +1,21 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Environment Variables') {
-            steps {
-                echo "Jenkins application name: ${APP_NAME}"
+    environment {
+        DISABLE_AUTH = 'true'
+        DB_ENGINE = 'sqlite'
+    }
 
-                bat '''
+    stages {
+        stage('Build') {
+            steps {
+                echo "Database engine is ${DB_ENGINE}"
+                echo "DISABLE_AUTH is ${DISABLE_AUTH}"
+
+                bat encoding: 'UTF-8', script: '''
                     @echo off
-                    echo Application: %APP_NAME%
-                    echo Test environment: %TEST_ENV%
-                    echo Build number: %BUILD_NUMBER%
-                    echo Branch: %BRANCH_NAME%
-                    echo Workspace: %WORKSPACE%
+                    chcp 65001 >nul
+                    set
                 '''
             }
         }
