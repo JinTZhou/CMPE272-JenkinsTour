@@ -4,7 +4,10 @@ pipeline {
     stages {
         stage('No-op') {
             steps {
-                bat 'dir'
+                bat encoding: 'GBK', script: '''
+                    @echo off
+                    dir
+                '''
             }
         }
     }
