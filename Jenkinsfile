@@ -1,14 +1,10 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.12-alpine'
-        }
-    }
+    agent any
 
     stages {
         stage('Hello') {
             steps {
-                sh 'python --version'
+                bat 'docker run --rm python:3.12-alpine python --version'
                 echo 'Hello World from Jenkins!'
             }
         }
